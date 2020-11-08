@@ -10,10 +10,11 @@ module.exports = {
   c: true,
   cpp: true,
   css: true,
-  "css-extras": true,
+  'css-extras': true,
   javascript: true,
   jsx: true,
-  "js-extras": true,
+  'js-extras': true,
+  'js-templates': true,
   coffeescript: true,
   diff: true,
   git: true,
@@ -35,5 +36,5 @@ module.exports = {
   tsx: true,
   typescript: true,
   wasm: true,
-  yaml: true
+  yaml: true,
 };
