@@ -13,15 +13,15 @@ import type {
   TokenOutputProps,
   RenderProps,
   PrismLib,
-  PrismTheme
+  PrismTheme,
 } from "../types";
 
 type Props = {
-  Prism: PrismLib,
+  Prism: any,
   theme?: PrismTheme,
   language: Language,
   code: string,
-  children: (props: RenderProps) => Node
+  children: (props: RenderProps) => Node,
 };
 
 class Highlight extends Component<Props, *> {
@@ -58,7 +58,7 @@ class Highlight extends Component<Props, *> {
       ...rest,
       className: "token-line",
       style: undefined,
-      key: undefined
+      key: undefined,
     };
 
     const themeDict = this.getThemeDict(this.props);
@@ -91,7 +91,7 @@ class Highlight extends Component<Props, *> {
 
     const baseStyle = empty ? { display: "inline-block" } : {};
     // $FlowFixMe
-    const typeStyles = types.map(type => themeDict[type]);
+    const typeStyles = types.map((type) => themeDict[type]);
     return Object.assign(baseStyle, ...typeStyles);
   };
 
@@ -107,7 +107,7 @@ class Highlight extends Component<Props, *> {
       className: `token ${token.types.join(" ")}`,
       children: token.content,
       style: this.getStyleForToken(token),
-      key: undefined
+      key: undefined,
     };
 
     if (style !== undefined) {
@@ -127,8 +127,36 @@ class Highlight extends Component<Props, *> {
     const themeDict = this.getThemeDict(this.props);
 
     const grammar = Prism.languages[language];
-    const mixedTokens =
-      grammar !== undefined ? Prism.tokenize(code, grammar, language) : [code];
+
+    // JOSH TWEAK
+    //
+    // Normally, Prism works by calling a "highlight" method. That
+    // method does the tokenization, and also runs hooks.
+    // The `js-templates` language I want to use relies on these
+    // hooks, but `prism-react-renderer` doesn't call them; in
+    // fact, in PRR's build of Prismjs, it stripped out the idea
+    // of hooks altogether!
+    //
+    // I'm bringing my own version of Prismjs, and that version
+    // supports hooks, but because we aren't calling `highlight`,
+    // those hooks are never called.
+    //
+    // I'm calling them myself, to add that augmented functionality.
+    let mixedTokens = [code];
+    if (grammar !== undefined) {
+      var env: any = {
+        code,
+        grammar,
+        language,
+      };
+
+      Prism.hooks.run("before-tokenize", env);
+      let tokens = Prism.tokenize(env.code, env.grammar);
+      env.tokens = tokens;
+      Prism.hooks.run("after-tokenize", env);
+      mixedTokens = tokens;
+    }
+
     const tokens = normalizeTokens(mixedTokens);
 
     return children({
@@ -136,7 +164,7 @@ class Highlight extends Component<Props, *> {
       className: `prism-code language-${language}`,
       style: themeDict !== undefined ? themeDict.root : {},
       getLineProps: this.getLineProps,
-      getTokenProps: this.getTokenProps
+      getTokenProps: this.getTokenProps,
     });
   }
 }

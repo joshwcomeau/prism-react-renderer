@@ -12,9 +12,7 @@
           }
         ]
       ],
-      "plugins": [
-        "babel-plugin-macros"
-      ]
+      "plugins": ["babel-plugin-macros"]
     },
     "cjs": {
       "presets": [
@@ -28,9 +26,7 @@
           }
         ]
       ],
-      "plugins": [
-        "babel-plugin-macros"
-      ]
+      "plugins": ["babel-plugin-macros"]
     },
     "es": {
       "presets": [
@@ -44,9 +40,7 @@
           }
         ]
       ],
-      "plugins": [
-        "babel-plugin-macros"
-      ]
+      "plugins": ["babel-plugin-macros"]
     }
   },
   "plugins": [
@@ -54,6 +48,21 @@
       "@babel/plugin-proposal-class-properties",
       {
         "loose": true
+      }
+    ],
+    [
+      "prismjs",
+      {
+        "languages": [
+          "javascript",
+          "jsx",
+          "js-templates",
+          "css",
+          "markup"
+        ],
+        "plugins": [],
+        "theme": "",
+        "css": false
       }
     ]
   ]
