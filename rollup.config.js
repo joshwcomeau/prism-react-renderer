@@ -17,7 +17,8 @@ if (pkgInfo.dependencies)
 
 const externalPredicate = new RegExp(`^(${external.join('|')})($|/)`);
 const bundlePredicate = /\/themes\//;
-const externalTest = id => externalPredicate.test(id) || bundlePredicate.test(id);
+const externalTest = (id) =>
+  externalPredicate.test(id) || bundlePredicate.test(id);
 
 const config = {
   onwarn: () => {},
@@ -40,7 +41,22 @@ const config = {
       plugins: [
         'babel-plugin-macros',
         '@babel/plugin-transform-flow-strip-types',
-        '@babel/plugin-proposal-class-properties'
+        '@babel/plugin-proposal-class-properties',
+        [
+          'prismjs',
+          {
+            languages: [
+              'javascript',
+              'jsx',
+              'js-templates',
+              'css',
+              'markup',
+            ],
+            plugins: [],
+            theme: '',
+            css: false,
+          },
+        ],
       ],
     }),
     buble({
@@ -56,19 +72,22 @@ const config = {
       babelrc: false,
       plugins: [
         '@babel/plugin-transform-object-assign',
-        ['@babel/plugin-transform-react-jsx', {
-          pragma: 'React.createElement',
-          pragmaFrag: 'React.Fragment',
-          useBuiltIns: true
-        }],
+        [
+          '@babel/plugin-transform-react-jsx',
+          {
+            pragma: 'React.createElement',
+            pragmaFrag: 'React.Fragment',
+            useBuiltIns: true,
+          },
+        ],
       ],
-    })
-  ]
+    }),
+  ],
 };
 
 if (!fs.existsSync('themes/')) fs.mkdirSync('themes');
 
-const themes = globby.sync('src/themes/*.js').map(input => {
+const themes = globby.sync('src/themes/*.js').map((input) => {
   const name = path.basename(input, '.js');
   const dir = 'themes/' + name;
 
@@ -80,7 +99,7 @@ const themes = globby.sync('src/themes/*.js').map(input => {
     sideEffects: false,
     main: 'index.cjs.js',
     module: 'index.js',
-    license: 'MIT'
+    license: 'MIT',
   };
 
   fs.writeFileSync(
@@ -94,13 +113,13 @@ const themes = globby.sync('src/themes/*.js').map(input => {
     output: [
       {
         file: path.join('./themes', name, 'index.cjs.js'),
-        format: 'cjs'
+        format: 'cjs',
       },
       {
         file: path.join('./themes', name, 'index.js'),
-        format: 'esm'
-      }
-    ]
+        format: 'esm',
+      },
+    ],
   };
 });
 
@@ -116,15 +135,15 @@ export default [
         dir: './',
         entryFileNames: '[name]/index.cjs.js',
         chunkFileNames: 'dist/[name]-[hash].cjs.js',
-        format: 'cjs'
+        format: 'cjs',
       },
       {
         dir: './',
         entryFileNames: '[name]/index.js',
         chunkFileNames: 'dist/[name]-[hash].js',
-        format: 'esm'
-      }
-    ]
+        format: 'esm',
+      },
+    ],
   },
-  ...themes
+  ...themes,
 ];

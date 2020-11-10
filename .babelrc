@@ -49,21 +49,6 @@
       {
         "loose": true
       }
-    ],
-    [
-      "prismjs",
-      {
-        "languages": [
-          "javascript",
-          "jsx",
-          "js-templates",
-          "css",
-          "markup"
-        ],
-        "plugins": [],
-        "theme": "",
-        "css": false
-      }
     ]
   ]
 }
