@@ -11,7 +11,7 @@ module.exports = {
   cpp: false,
   css: false,
   "css-extras": false,
-  javascript: false,
+  javascript: true,
   jsx: false,
   "js-extras": false,
   coffeescript: false,
