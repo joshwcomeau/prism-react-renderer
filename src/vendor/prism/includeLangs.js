@@ -6,5 +6,8 @@
 module.exports = {
   markup: true,
   css: true,
+  "css-extras": true,
+  javascript: true,
+  jsx: true,
   "js-templates": true,
 };
